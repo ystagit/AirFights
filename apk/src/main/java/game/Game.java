@@ -6,6 +6,7 @@ import javax.microedition.khronos.egl.EGLConfig;
 import javax.microedition.khronos.opengles.GL10;
 
 import android.opengl.GLSurfaceView.Renderer;
+import game.camera.Camera;
 import game.model.Matrix;
 import game.model.Plane;
 import game.model.info.PlaneInfo;
@@ -27,6 +28,7 @@ public class Game implements Renderer {
 
     private Plane plane;
     private PlaneInfo planeInfo;
+    private Camera camera;
 
     public Game(Context context) {
         this.context = context;
@@ -44,6 +46,8 @@ public class Game implements Renderer {
 
         // Use culling to remove back faces.
         glEnable(GL_CULL_FACE);
+
+        camera = new Camera(matrix.getViewMatrix());
 
         plane = new Plane(context, matrix,  R.raw.sphere, R.drawable.texture1);
         planeInfo = plane.getPlaneInfo();
@@ -63,7 +67,7 @@ public class Game implements Renderer {
         final float bottom = -1.0f;
         final float top = 1.0f;
         final float near = 1.0f;
-        final float far = 10.0f;
+        final float far = 40.0f;
 
         frustumM(matrix.getProjectionMatrix(), 0, left, right, bottom, top, near, far);
     }
@@ -79,7 +83,9 @@ public class Game implements Renderer {
         * settings, then try adding a call to glSurfaceView.setEGConfigChooser(8, 8, 8, 16, 0); before the call to glSurfaceView.setRender().
         * */
         glClear(GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT);
-        planeInfo.setPosition(new Position(0.0f, 0.0f, -10.0f));
+        Position position = new Position(0.0f, 0.0f, -10.0f);
+        camera.update(position, 90.0f, 60.0f, 10.0f);
+        planeInfo.setPosition(position);
         planeInfo.setRotation(new Rotation(30.0f, 0.0f, 1.0f, 0.0f));
         plane.showPnale(planeInfo);
     }

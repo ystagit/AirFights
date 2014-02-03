@@ -1,9 +1,11 @@
 package game.model;
 
 import android.content.Context;
+import game.camera.Camera;
 import game.model.info.PlaneInfo;
 import game.programs.Object3DShaderProgram;
 import game.util.MoveHelper;
+import game.util.ObjectHelper;
 import game.util.TextureHelper;
 
 /*
@@ -33,26 +35,6 @@ public class Plane extends Object3D {
     public Plane(Context context, Matrix matrix, int resourceId, int textureId) {
         super(context, resourceId);
         this.matrix = matrix;
-
-        // Position the eye in front of the origin.
-        final float eyeX = 0.0f;
-        final float eyeY = 0.0f;
-        final float eyeZ = -0.5f;
-
-        // We are looking toward the distance
-        final float lookX = 0.0f;
-        final float lookY = 0.0f;
-        final float lookZ = -5.0f;
-
-        // Set our up vector. This is where our head would be pointing were we holding the camera.
-        final float upX = 0.0f;
-        final float upY = 1.0f;
-        final float upZ = 0.0f;
-
-        // Set the view matrix. This matrix can be said to represent the camera position.
-        // NOTE: In OpenGL 1, a ModelView matrix is used, which is a combination of a model and
-        // view matrix. In OpenGL 2, we can keep track of these matrices separately if we choose.
-        setLookAtM(matrix.getViewMatrix(), 0, eyeX, eyeY, eyeZ, lookX, lookY, lookZ, upX, upY, upZ);
 
         moveHelper = new MoveHelper(mModelMatrix);
         planeInfo = new PlaneInfo();
