@@ -1,19 +1,26 @@
 package game.model.info;
 
-import game.util.Geometry.Point;
-
-// point is position of plane
+import static game.util.ObjectHelper.*;
 
 public class PlaneInfo {
 
-    private Point point;
+    private Position position;
+    private Rotation rotation;
 
-    public void setPoint(Point point) {
-        this.point = point;
+    public void setPosition(Position position) {
+        this.position = position;
     }
 
-    public Point getPoint() {
-        return point;
+    public Position getPosition() {
+        return position;
+    }
+
+    public void setRotation(Rotation rotation) {
+        this.rotation = rotation;
+    }
+
+    public Rotation getRotatio() {
+        return rotation;
     }
 
 }

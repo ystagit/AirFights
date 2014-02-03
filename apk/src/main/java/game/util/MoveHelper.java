@@ -3,7 +3,7 @@ package game.util;
 import static android.opengl.Matrix.rotateM;
 import static android.opengl.Matrix.setIdentityM;
 import static android.opengl.Matrix.translateM;
-import static game.util.Geometry.Point;
+import static game.util.ObjectHelper.*;
 
 public class MoveHelper {
 
@@ -17,13 +17,13 @@ public class MoveHelper {
         setIdentityM(matrix, 0);
     }
 
-    public Point setPosition(Point point) {
+    public Position position(Position point) {
         translateM(matrix, 0, point.x, point.y, point.z);
         return point;
     }
 
-    public void rotate(float angleInDegrees, float x, float y, float z) {
-        rotateM(matrix, 0, angleInDegrees, x, y, z);
+    public void rotate(Rotation rotation) {
+        rotateM(matrix, 0, rotation.angle, rotation.x, rotation.y, rotation.z);
     }
 
 }

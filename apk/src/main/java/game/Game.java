@@ -9,7 +9,6 @@ import android.opengl.GLSurfaceView.Renderer;
 import game.model.Matrix;
 import game.model.Plane;
 import game.model.info.PlaneInfo;
-import game.util.Geometry.Point;
 import main.java.game.R;
 
 /*
@@ -17,6 +16,7 @@ import main.java.game.R;
 * */
 import static android.opengl.GLES20.*;
 import static android.opengl.Matrix.*;
+import static game.util.ObjectHelper.*;
 
 public class Game implements Renderer {
 
@@ -47,7 +47,6 @@ public class Game implements Renderer {
 
         plane = new Plane(context, matrix,  R.raw.sphere, R.drawable.texture1);
         planeInfo = plane.getPlaneInfo();
-        planeInfo.setPoint(new Point(0.0f, 0.0f, -10.0f));
 
     }
 
@@ -80,6 +79,8 @@ public class Game implements Renderer {
         * settings, then try adding a call to glSurfaceView.setEGConfigChooser(8, 8, 8, 16, 0); before the call to glSurfaceView.setRender().
         * */
         glClear(GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT);
+        planeInfo.setPosition(new Position(0.0f, 0.0f, -10.0f));
+        planeInfo.setRotation(new Rotation(30.0f, 0.0f, 1.0f, 0.0f));
         plane.showPnale(planeInfo);
     }
 
