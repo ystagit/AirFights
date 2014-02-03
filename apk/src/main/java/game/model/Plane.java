@@ -1,7 +1,9 @@
 package game.model;
 
 import android.content.Context;
+import game.model.info.PlaneInfo;
 import game.programs.Object3DShaderProgram;
+import game.util.MoveHelper;
 import game.util.TextureHelper;
 
 /*
@@ -22,6 +24,8 @@ public class Plane extends Object3D {
     private float[] mModelMatrix = new float[16];
     private Matrix matrix;
 
+    private PlaneInfo planeInfo;
+    private MoveHelper moveHelper;
 
     private int texture;
     private Object3DShaderProgram shaderProgram;
@@ -50,15 +54,22 @@ public class Plane extends Object3D {
         // view matrix. In OpenGL 2, we can keep track of these matrices separately if we choose.
         setLookAtM(matrix.getViewMatrix(), 0, eyeX, eyeY, eyeZ, lookX, lookY, lookZ, upX, upY, upZ);
 
+        moveHelper = new MoveHelper(mModelMatrix);
+        planeInfo = new PlaneInfo();
+
         shaderProgram = new Object3DShaderProgram(context);
         texture = TextureHelper.loadTexture(context, textureId);
 
     }
 
-    public void showPnale() {
-        setIdentityM(mModelMatrix, 0);
-        translateM(mModelMatrix, 0, 0.0f, 0.0f, -7.0f);
-        rotateM(mModelMatrix, 0, 0, 0.0f, 1.0f, 0.0f);
+    public PlaneInfo getPlaneInfo() {
+        return planeInfo;
+    }
+
+    public void showPnale(PlaneInfo planeInfo) {
+        moveHelper.setIdentity();
+        moveHelper.setPosition(planeInfo.getPoint());
+        moveHelper.rotate(0.0f, 0.0f, 1.0f, 0.0f);
         this.drawPlane();
     }
 

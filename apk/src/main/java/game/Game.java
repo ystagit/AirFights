@@ -8,6 +8,8 @@ import javax.microedition.khronos.opengles.GL10;
 import android.opengl.GLSurfaceView.Renderer;
 import game.model.Matrix;
 import game.model.Plane;
+import game.model.info.PlaneInfo;
+import game.util.Geometry.Point;
 import main.java.game.R;
 
 /*
@@ -24,6 +26,7 @@ public class Game implements Renderer {
     private final Context context;
 
     private Plane plane;
+    private PlaneInfo planeInfo;
 
     public Game(Context context) {
         this.context = context;
@@ -43,6 +46,8 @@ public class Game implements Renderer {
         glEnable(GL_CULL_FACE);
 
         plane = new Plane(context, matrix,  R.raw.sphere, R.drawable.texture1);
+        planeInfo = plane.getPlaneInfo();
+        planeInfo.setPoint(new Point(0.0f, 0.0f, -10.0f));
 
     }
 
@@ -75,7 +80,7 @@ public class Game implements Renderer {
         * settings, then try adding a call to glSurfaceView.setEGConfigChooser(8, 8, 8, 16, 0); before the call to glSurfaceView.setRender().
         * */
         glClear(GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT);
-        plane.showPnale();
+        plane.showPnale(planeInfo);
     }
 
 }
