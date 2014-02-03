@@ -32,13 +32,13 @@ public class Object3D {
 
     }
 
-    public void bindData(Object3DShaderProgram shaderProgram) {
+    protected void bindData(Object3DShaderProgram shaderProgram) {
         vertexArray.setVertexAttribPointer(0, shaderProgram.getPositionAttrLoc(), POSITION_DATA_SIZE, 0);
         normalArray.setVertexAttribPointer(0, shaderProgram.getNormalAttrLoc(), NORMAL_DATA_SIZE, 0);
         textureCoordinateArray.setVertexAttribPointer(0, shaderProgram.getTextureCoordinateAttrLoc(), TEXTURE_COORDINATE_DATA_SIZE, 0);
     }
 
-    public void draw() {
+    protected void draw() {
         glDrawArrays(GL_TRIANGLES, 0, loader.getFaceCount()*3);
     }
 

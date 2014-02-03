@@ -6,51 +6,27 @@ import javax.microedition.khronos.egl.EGLConfig;
 import javax.microedition.khronos.opengles.GL10;
 
 import android.opengl.GLSurfaceView.Renderer;
-import game.model.Object3D;
-import game.programs.Object3DShaderProgram;
-import game.util.TextureHelper;
+import game.model.Matrix;
+import game.model.Plane;
 import main.java.game.R;
 
 /*
 * These static imports will help with autocomplete.
 * */
 import static android.opengl.GLES20.*;
-import static android.opengl.GLUtils.*;
 import static android.opengl.Matrix.*;
 
 public class Game implements Renderer {
 
     private static final String TAG = Game.class.getName();
+    private Matrix matrix = new Matrix();
 
     private final Context context;
 
-    private float[] mLightPosInEyeSpace = new float[4];
-
-    /*
-     * Store the model matrix. This matrix is used to move models from object space (where each model can be thought
-     * of being located at the center of the universe) to world space.
-     */
-    private float[] mModelMatrix = new float[16];
-
-    /*
-     * Store the view matrix. This can be thought of as our camera. This matrix transforms world space to eye space;
-     * it positions things relative to our eye.
-     */
-    private float[] mViewMatrix = new float[16];
-
-    /* Store the projection matrix. This is used to project the scene onto a 2D viewport. */
-    private float[] mProjectionMatrix = new float[16];
-
-    /* Allocate storage for the final combined matrix. This will be passed into the shader program. */
-    private float[] mMVPMatrix = new float[16];
-
-    private int texture;
-    private Object3DShaderProgram shaderProgram;
-    private Object3D object3D;
+    private Plane plane;
 
     public Game(Context context) {
         this.context = context;
-        object3D = new Object3D(context, R.raw.sphere);
     }
 
     @Override
@@ -66,28 +42,8 @@ public class Game implements Renderer {
         // Use culling to remove back faces.
         glEnable(GL_CULL_FACE);
 
-        // Position the eye in front of the origin.
-        final float eyeX = 0.0f;
-        final float eyeY = 0.0f;
-        final float eyeZ = -0.5f;
+        plane = new Plane(context, matrix,  R.raw.sphere, R.drawable.texture1);
 
-        // We are looking toward the distance
-        final float lookX = 0.0f;
-        final float lookY = 0.0f;
-        final float lookZ = -5.0f;
-
-        // Set our up vector. This is where our head would be pointing were we holding the camera.
-        final float upX = 0.0f;
-        final float upY = 1.0f;
-        final float upZ = 0.0f;
-
-        // Set the view matrix. This matrix can be said to represent the camera position.
-        // NOTE: In OpenGL 1, a ModelView matrix is used, which is a combination of a model and
-        // view matrix. In OpenGL 2, we can keep track of these matrices separately if we choose.
-        setLookAtM(mViewMatrix, 0, eyeX, eyeY, eyeZ, lookX, lookY, lookZ, upX, upY, upZ);
-
-        shaderProgram = new Object3DShaderProgram(context);
-        texture = TextureHelper.loadTexture(context, R.drawable.texture1);
     }
 
     @Override
@@ -105,7 +61,7 @@ public class Game implements Renderer {
         final float near = 1.0f;
         final float far = 10.0f;
 
-        frustumM(mProjectionMatrix, 0, left, right, bottom, top, near, far);
+        frustumM(matrix.getProjectionMatrix(), 0, left, right, bottom, top, near, far);
     }
 
     @Override
@@ -119,20 +75,7 @@ public class Game implements Renderer {
         * settings, then try adding a call to glSurfaceView.setEGConfigChooser(8, 8, 8, 16, 0); before the call to glSurfaceView.setRender().
         * */
         glClear(GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT);
-        setIdentityM(mModelMatrix, 0);
-        translateM(mModelMatrix, 0, 0.0f, 0.0f, -7.0f);
-        rotateM(mModelMatrix, 0, 0, 0.0f, 1.0f, 0.0f);
-        draw();
-    }
-
-    private void draw() {
-
-        shaderProgram.useProgram();
-        object3D.bindData(shaderProgram);
-        multiplyMM(mMVPMatrix, 0, mViewMatrix, 0, mModelMatrix, 0);
-        multiplyMM(mMVPMatrix, 0, mProjectionMatrix, 0, mMVPMatrix, 0);
-        shaderProgram.setUniforms(mMVPMatrix, mLightPosInEyeSpace, texture);
-        object3D.draw();
+        plane.showPnale();
     }
 
 }
