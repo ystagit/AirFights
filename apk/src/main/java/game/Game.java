@@ -6,6 +6,7 @@ import javax.microedition.khronos.egl.EGLConfig;
 import javax.microedition.khronos.opengles.GL10;
 
 import android.opengl.GLSurfaceView.Renderer;
+import android.util.Log;
 import game.camera.Camera;
 import game.model.Matrix;
 import game.model.Plane;
@@ -26,8 +27,7 @@ public class Game implements Renderer {
 
     private final Context context;
 
-    private Plane plane;
-    private PlaneInfo planeInfo;
+    private Plane[] planes;
     private Camera camera;
 
     public Game(Context context) {
@@ -48,10 +48,7 @@ public class Game implements Renderer {
         glEnable(GL_CULL_FACE);
 
         camera = new Camera(matrix.getViewMatrix());
-
-        plane = new Plane(context, matrix,  R.raw.sphere, R.drawable.texture1);
-        planeInfo = plane.getPlaneInfo();
-
+        createPlanes(2);
     }
 
     @Override
@@ -83,11 +80,47 @@ public class Game implements Renderer {
         * settings, then try adding a call to glSurfaceView.setEGConfigChooser(8, 8, 8, 16, 0); before the call to glSurfaceView.setRender().
         * */
         glClear(GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT);
-        Position position = new Position(0.0f, 0.0f, -10.0f);
-        camera.update(position, 90.0f, 60.0f, 10.0f);
-        planeInfo.setPosition(position);
-        planeInfo.setRotation(new Rotation(30.0f, 0.0f, 1.0f, 0.0f));
-        plane.showPnale(planeInfo);
+
+        if (setCameraPosition(1)) {
+            drawPlanes();
+        }
+
+    }
+
+    // Camera position is set to a plane.
+    private boolean setCameraPosition(int number) {
+        boolean hasCamera = false;
+
+        if (number < planes.length) {
+            Position position = planes[number].getPlaneInfo().getPosition();
+            camera.update(position, 90.0f, 60.0f, 10.0f);
+            hasCamera = true;
+        } else {
+            Log.wtf(TAG, "Camera was not set for a plane");
+        }
+
+        return hasCamera;
+    }
+
+    private void drawPlanes() {
+        for (Plane plane : planes) {
+            PlaneInfo planeInfo = plane.getPlaneInfo();
+            plane.showPlane(planeInfo);
+        }
+    }
+
+    private void createPlanes(int amount) {
+        planes = new Plane[amount];
+
+        for (int i = 0; i < amount; i++) {
+            Position position = new Position(6.0f*i, 0.0f, -10.0f);
+            Rotation rotation = new Rotation(30.0f, 0.0f, 1.0f, 0.0f);
+
+            planes[i] = new Plane(context, matrix,  R.raw.sphere, R.drawable.texture1);
+            PlaneInfo planeInfo = planes[i].getPlaneInfo();
+            planeInfo.setPosition(position);
+            planeInfo.setRotation(rotation);
+        }
     }
 
 }

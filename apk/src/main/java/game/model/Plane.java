@@ -48,7 +48,7 @@ public class Plane extends Object3D {
         return planeInfo;
     }
 
-    public void showPnale(PlaneInfo planeInfo) {
+    public void showPlane(PlaneInfo planeInfo) {
         moveHelper.setIdentity();
         moveHelper.position(planeInfo.getPosition());
         moveHelper.rotate(planeInfo.getRotatio());
