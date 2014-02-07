@@ -8,30 +8,32 @@ import javax.microedition.khronos.opengles.GL10;
 import android.opengl.GLSurfaceView.Renderer;
 import android.util.Log;
 import game.camera.Camera;
+import game.data.ModelData;
 import game.model.Matrix;
-import game.model.Plane;
-import game.model.info.PlaneInfo;
-import main.java.game.R;
+import game.model.PlaneModel;
+import game.model.info.Plane;
 
 /*
 * These static imports will help with autocomplete.
 * */
 import static android.opengl.GLES20.*;
 import static android.opengl.Matrix.*;
-import static game.util.ObjectHelper.*;
 
 public class Game implements Renderer {
 
     private static final String TAG = Game.class.getName();
     private Matrix matrix = new Matrix();
+    private Plane[] planes;
 
     private final Context context;
 
-    private Plane[] planes;
+    private PlaneModel[] planeModels;
     private Camera camera;
 
     public Game(Context context) {
         this.context = context;
+        ModelData modelData = ModelData.getInstance();
+        planes = modelData.getPlanes();
     }
 
     @Override
@@ -48,7 +50,7 @@ public class Game implements Renderer {
         glEnable(GL_CULL_FACE);
 
         camera = new Camera(matrix.getViewMatrix());
-        createPlanes(2);
+        createPlanes();
     }
 
     @Override
@@ -81,45 +83,37 @@ public class Game implements Renderer {
         * */
         glClear(GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT);
 
-        if (setCameraPosition(1)) {
+        if (setCameraPosition()) {
             drawPlanes();
         }
 
     }
 
     // Camera position is set to a plane.
-    private boolean setCameraPosition(int number) {
-        boolean hasCamera = false;
+    private boolean setCameraPosition() {
 
-        if (number < planes.length) {
-            Position position = planes[number].getPlaneInfo().getPosition();
-            camera.update(position, 90.0f, 60.0f, 10.0f);
-            hasCamera = true;
-        } else {
-            Log.wtf(TAG, "Camera was not set for a plane");
+        for (Plane plane : planes) {
+            if (plane.isCamera()) {
+                camera.update(plane.getPosition(), 90.0f, 60.0f, 10.0f);
+                return true;
+            }
         }
 
-        return hasCamera;
+        Log.wtf(TAG, "Camera was not set for a plane");
+        return false;
     }
 
     private void drawPlanes() {
-        for (Plane plane : planes) {
-            PlaneInfo planeInfo = plane.getPlaneInfo();
-            plane.showPlane(planeInfo);
+        for (PlaneModel planeModel : planeModels) {
+            planeModel.showPlaneModel();
         }
     }
 
-    private void createPlanes(int amount) {
-        planes = new Plane[amount];
+    private void createPlanes() {
+        planeModels = new PlaneModel[planes.length];
 
-        for (int i = 0; i < amount; i++) {
-            Position position = new Position(6.0f*i, 0.0f, -10.0f);
-            Rotation rotation = new Rotation(30.0f, 0.0f, 1.0f, 0.0f);
-
-            planes[i] = new Plane(context, matrix,  R.raw.sphere, R.drawable.texture1);
-            PlaneInfo planeInfo = planes[i].getPlaneInfo();
-            planeInfo.setPosition(position);
-            planeInfo.setRotation(rotation);
+        for (int i = 0; i < planes.length; i++) {
+            planeModels[i] = new PlaneModel(context, matrix, planes[i]);
         }
     }
 

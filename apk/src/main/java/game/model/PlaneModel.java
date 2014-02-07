@@ -1,11 +1,9 @@
 package game.model;
 
 import android.content.Context;
-import game.camera.Camera;
-import game.model.info.PlaneInfo;
+import game.model.info.Plane;
 import game.programs.Object3DShaderProgram;
 import game.util.MoveHelper;
-import game.util.ObjectHelper;
 import game.util.TextureHelper;
 
 /*
@@ -13,9 +11,9 @@ import game.util.TextureHelper;
 * */
 import static android.opengl.Matrix.*;
 
-public class Plane extends Object3D {
+public class PlaneModel extends Object3D {
 
-    private static final String TAG = Plane.class.getName();
+    private static final String TAG = PlaneModel.class.getName();
 
     private float[] mLightPosInEyeSpace = new float[4];
 
@@ -26,36 +24,31 @@ public class Plane extends Object3D {
     private float[] mModelMatrix = new float[16];
     private Matrix matrix;
 
-    private PlaneInfo planeInfo;
     private MoveHelper moveHelper;
 
     private int texture;
     private Object3DShaderProgram shaderProgram;
+    private Plane plane;
 
-    public Plane(Context context, Matrix matrix, int resourceId, int textureId) {
-        super(context, resourceId);
+    public PlaneModel(Context context, Matrix matrix, Plane plane) {
+        super(context, plane.getResourceId());
         this.matrix = matrix;
+        this.plane = plane;
 
         moveHelper = new MoveHelper(mModelMatrix);
-        planeInfo = new PlaneInfo();
 
         shaderProgram = new Object3DShaderProgram(context);
-        texture = TextureHelper.loadTexture(context, textureId);
-
+        texture = TextureHelper.loadTexture(context, plane.getTextureId());
     }
 
-    public PlaneInfo getPlaneInfo() {
-        return planeInfo;
-    }
-
-    public void showPlane(PlaneInfo planeInfo) {
+    public void showPlaneModel() {
         moveHelper.setIdentity();
-        moveHelper.position(planeInfo.getPosition());
-        moveHelper.rotate(planeInfo.getRotatio());
-        this.drawPlane();
+        moveHelper.position(plane.getPosition());
+        moveHelper.rotate(plane.getRotatio());
+        this.drawPlaneModel();
     }
 
-    private void drawPlane() {
+    private void drawPlaneModel() {
         shaderProgram.useProgram();
         super.bindData(shaderProgram);
         multiplyMM(matrix.getMVPMatrix(), 0, matrix.getViewMatrix(), 0, mModelMatrix, 0);

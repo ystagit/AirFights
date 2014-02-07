@@ -1,14 +1,19 @@
 package game;
 
 import android.content.Context;
+import android.util.AttributeSet;
 import android.view.ViewGroup;
 
 class GLViewGroup extends ViewGroup {
 
     private ClearGLSurfaceView mGLView;
 
-    public GLViewGroup(Context context) {
-        super(context);
+    public GLViewGroup(Context context, AttributeSet attrs) {
+        this(context, attrs, 0);
+    }
+
+    public GLViewGroup(Context context, AttributeSet attrs, int defStyle) {
+        super(context, attrs, defStyle);
 
         mGLView = new ClearGLSurfaceView(context);
         addView(mGLView);
