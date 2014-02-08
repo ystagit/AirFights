@@ -1,10 +1,8 @@
 package game;
 
-import android.app.Activity;
-import android.app.ActivityManager;
-import android.app.FragmentManager;
-import android.app.FragmentTransaction;
+import android.app.*;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.pm.*;
 import android.os.Build;
 import android.os.Bundle;
@@ -26,7 +24,7 @@ public class GameActivity extends Activity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        Plane[] planes = getPlanes(2);
+        Plane[] planes = getPlanes(4);
         modelData = ModelData.getInstance();
         modelData.setPlanes(planes);
 
@@ -84,7 +82,7 @@ public class GameActivity extends Activity {
             plane.setTextureId(R.drawable.texture1);
             plane.setPosition(position);
             plane.setRotation(rotation);
-            if (i == 0) {
+            if (i == 2) {
                 plane.setCamera(true);
             }
             planes[i] = plane;
@@ -112,8 +110,29 @@ public class GameActivity extends Activity {
     }
 
     @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        modelData.remove();
+    public void onBackPressed() {
+        if (planesListFragment.isVisible()) {
+            super.onBackPressed();
+        } else {
+            showExitDialog();
+        }
+    }
+
+    private void showExitDialog() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("Do you want to exit ?");
+
+        // Add the OK buttons
+        builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+                modelData.remove();
+                finish();
+            }
+        });
+
+        // Add the CANCEL buttons
+        builder.setNegativeButton("CANCEL", null);
+
+        builder.show();
     }
 }

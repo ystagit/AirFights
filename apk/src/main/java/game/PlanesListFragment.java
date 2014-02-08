@@ -40,6 +40,22 @@ public class PlanesListFragment extends ListFragment {
                 new int[] { R.id.planeName});
 
         setListAdapter(adapter);
+        getListView().setChoiceMode(ListView.CHOICE_MODE_SINGLE);
+        getListView().setItemChecked(getIndex(), true);
+
+    }
+
+    private int getIndex() {
+        int index = 0;
+
+        for (Plane plane : planes) {
+            if (plane.isCamera()) {
+                break;
+            }
+            index++;
+        }
+
+        return index;
     }
 
     private void addToList(Plane plane) {
