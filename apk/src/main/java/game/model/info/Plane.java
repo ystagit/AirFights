@@ -10,6 +10,7 @@ public class Plane {
     private int resourceId;
     private int textureId;
     private boolean camera;
+    private InfoCamera infoCamera;
 
     public Plane() {}
 
@@ -33,7 +34,7 @@ public class Plane {
         this.rotation = rotation;
     }
 
-    public Rotation getRotatio() {
+    public Rotation getRotation() {
         return rotation;
     }
 
@@ -61,4 +62,11 @@ public class Plane {
         return camera;
     }
 
+    public void setInfoCamera(InfoCamera infoCamera) {
+        this.infoCamera = infoCamera;
+    }
+
+    public InfoCamera getInfoCamera() {
+        return infoCamera;
+    }
 }

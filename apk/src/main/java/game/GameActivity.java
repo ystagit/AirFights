@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Toast;
 import game.data.ModelData;
+import game.model.info.InfoCamera;
 import game.model.info.Plane;
 import game.util.ObjectHelper;
 import main.java.game.R;
@@ -85,6 +86,16 @@ public class GameActivity extends Activity {
             if (i == 2) {
                 plane.setCamera(true);
             }
+
+            if (plane.isCamera()) {
+                InfoCamera infoCamera = new InfoCamera();
+                infoCamera.setPosition(plane.getPosition());
+                infoCamera.setXRotation(0);
+                infoCamera.setYRotation(0);
+                infoCamera.setRadius(10);
+                plane.setInfoCamera(infoCamera);
+            }
+
             planes[i] = plane;
         }
 

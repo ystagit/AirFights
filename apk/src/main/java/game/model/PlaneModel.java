@@ -44,7 +44,7 @@ public class PlaneModel extends Object3D {
     public void showPlaneModel() {
         moveHelper.setIdentity();
         moveHelper.position(plane.getPosition());
-        moveHelper.rotate(plane.getRotatio());
+        moveHelper.rotate(plane.getRotation());
         this.drawPlaneModel();
     }
 

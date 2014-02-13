@@ -24,6 +24,7 @@ public class Game implements Renderer {
     private static final String TAG = Game.class.getName();
     private Matrix matrix = new Matrix();
     private Plane[] planes;
+    private Plane plane;
 
     private final Context context;
 
@@ -92,15 +93,27 @@ public class Game implements Renderer {
     // Camera position is set to a plane.
     private boolean setCameraPosition() {
 
-        for (Plane plane : planes) {
-            if (plane.isCamera()) {
-                camera.update(plane.getPosition(), 90.0f, 60.0f, 10.0f);
-                return true;
-            }
+        if (plane != null && plane.isCamera()) {
+            camera.update(plane.getInfoCamera());
+            return true;
+        } else {
+            plane = selectPlane();
+            if (plane != null) return true;
         }
 
         Log.wtf(TAG, "Camera was not set for a plane");
         return false;
+    }
+
+    private Plane selectPlane() {
+        for (Plane plane : planes) {
+            if (plane.isCamera()) {
+                camera.update(plane.getInfoCamera());
+                return plane;
+            }
+        }
+
+        return null;
     }
 
     private void drawPlanes() {

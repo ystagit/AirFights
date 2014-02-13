@@ -9,6 +9,7 @@ import android.view.View;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
 import game.data.ModelData;
+import game.model.info.InfoCamera;
 import game.model.info.Plane;
 import main.java.game.R;
 
@@ -72,9 +73,18 @@ public class PlanesListFragment extends ListFragment {
 
         for (Plane plane : planes) {
             plane.setCamera(false);
+            plane.setInfoCamera(null);
         }
 
         planes[position].setCamera(true);
+
+        InfoCamera infoCamera = new InfoCamera();
+        infoCamera.setPosition(planes[position].getPosition());
+        infoCamera.setRadius(10);
+        infoCamera.setYRotation(45);
+        infoCamera.setXRotation(0);
+
+        planes[position].setInfoCamera(infoCamera);
 
         transaction.remove(this);
         fragmentManager.popBackStack();

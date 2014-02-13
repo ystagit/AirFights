@@ -6,7 +6,7 @@ import android.view.ViewGroup;
 
 class GLViewGroup extends ViewGroup {
 
-    private ClearGLSurfaceView mGLView;
+    private ControllerGLSurfaceView mGLView;
 
     public GLViewGroup(Context context, AttributeSet attrs) {
         this(context, attrs, 0);
@@ -15,7 +15,7 @@ class GLViewGroup extends ViewGroup {
     public GLViewGroup(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
 
-        mGLView = new ClearGLSurfaceView(context);
+        mGLView = new ControllerGLSurfaceView(context);
         addView(mGLView);
     }
 

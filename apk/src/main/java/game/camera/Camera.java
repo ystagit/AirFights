@@ -1,6 +1,7 @@
 package game.camera;
 
 
+import game.model.info.InfoCamera;
 import game.util.ObjectHelper.Position;
 
 import static android.opengl.Matrix.*;
@@ -28,7 +29,13 @@ public class Camera {
         this.viewMatrix = viewMatrix;
     }
 
-    public void update(Position position, float xRotation, float yRotation, float radius) {
+    public void update(InfoCamera infoCamera) {
+
+        Position position = infoCamera.getPosition();
+        float xRotation = infoCamera.getXRotation();
+        float yRotation = infoCamera.getYRotation();
+        float radius = infoCamera.getRadius();
+
         eyeX = (float) (position.x + radius * Math.cos(Math.toRadians(xRotation)));
         eyeY = (float) (position.y + radius * Math.cos(Math.toRadians(yRotation)));
         eyeZ = (float) (position.z + radius * Math.sin(Math.toRadians(xRotation)));
@@ -36,10 +43,6 @@ public class Camera {
         lookX = position.x;
         lookY = position.y;
         lookZ = position.z;
-
-//        eyeX = 0.0f;
-//        eyeY = 0.0f;
-//        eyeZ = -0.5f;
 
         upX = 0.0f;
         upY = 1.0f;
