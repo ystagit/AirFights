@@ -15,6 +15,13 @@
             <version>4.1.1.4</version>
             <scope>provided</scope>
         </dependency>
+
+        <dependency>
+            <groupId>com.projectdarkstar.ext.neakor</groupId>
+            <artifactId>md5importer</artifactId>
+            <version>1.2.4</version>
+        </dependency>
+
     </dependencies>
 
     <build>
@@ -41,5 +48,13 @@
             </plugin>
         </plugins>
     </build>
+
+    <repositories>
+        <repository>
+            <id>java.net-m2</id>
+            <name>java.net - Maven 2</name>
+            <url>https://repository.jboss.org/nexus/content/repositories/java.net-m2</url>
+        </repository>
+    </repositories>
 
 </project>

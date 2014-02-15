@@ -47,8 +47,21 @@ public class Game implements Renderer {
          */
         glClearColor(0.5f, 0.5f, 0.5f, 0.0f);
 
-        // Use culling to remove back faces.
+        /*
+        * 1) The drawing order is the cause.
+        * Depth sorted drawing of faces is required (from far to near). If intersection occurs, depth sorting must be
+        * applied for each sub face defined by intersection. For your specific case, splitting the cube's geometry by
+        * the plane in two halves and then draw the faces in order will theoretically do the job.
+        *
+        * EDIT: If the cube is the only transparent object, depth sorted drawing of the cube (without splitting up the
+        * geometry) after rendering the plane works aswell.
+        *
+        * Another solution is fragment based depth sorting using shader techniques like depth peeling.
+        *
+        * 2) As mentioned, backfaces of a semitransparent object must be drawn with face culling off.
+        * */
         glEnable(GL_CULL_FACE);
+        glEnable(GL_DEPTH_TEST);
 
         camera = new Camera(matrix.getViewMatrix());
         createPlanes();
